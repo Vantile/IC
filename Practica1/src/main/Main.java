@@ -1,5 +1,12 @@
 package main;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.List;
+
 import algoritmo.AEstrella;
 import nodo.Nodo;
 import tabla.Coords;
@@ -8,36 +15,34 @@ import tabla.Tabla;
 public class Main {
 
 	public static void main(String[] args) {
-		Tabla tabla = new Tabla(5);
-		Nodo[][] tablero = tabla.p_nodos;
-		tablero[0][0] = new Nodo(false);
-		tablero[0][1] = new Nodo(true);
-		tablero[0][2] = new Nodo(true);
-		tablero[0][3] = new Nodo(true);
-		tablero[0][4] = new Nodo(true);
-		tablero[1][0] = new Nodo(true);
-		tablero[1][1] = new Nodo(false);
-		tablero[1][2] = new Nodo(true);
-		tablero[1][3] = new Nodo(true);
-		tablero[1][4] = new Nodo(true);
-		tablero[2][0] = new Nodo(true);
-		tablero[2][1] = new Nodo(false);
-		tablero[2][2] = new Nodo(true);
-		tablero[2][3] = new Nodo(true);
-		tablero[2][4] = new Nodo(true);
-		tablero[3][0] = new Nodo(true);
-		tablero[3][1] = new Nodo(false);
-		tablero[3][2] = new Nodo(true);
-		tablero[3][3] = new Nodo(true);
-		tablero[3][4] = new Nodo(true);
-		tablero[4][0] = new Nodo(true);
-		tablero[4][1] = new Nodo(false);
-		tablero[4][2] = new Nodo(true);
-		tablero[4][3] = new Nodo(true);
-		tablero[4][4] = new Nodo(true);
-		Coords ini = new Coords(4, 0);
-		Coords fin = new Coords(3, 4);
-		AEstrella alg = new AEstrella(tabla, ini, fin);
+		
+		final String boardFile = "board.txt";
+		Path file = Paths.get(boardFile);
+		try {
+			List<String> lines = Files.readAllLines(file);
+			Iterator<String> it = lines.iterator();
+			int size = Integer.parseInt(it.next());
+			Tabla tabla = new Tabla(size);
+			Nodo[][] tablero = tabla.p_nodos;
+			for(int i = 0; i < size; ++i)
+			{
+				for(int j = 0; j < size; ++j)
+				{
+					tablero[i][j] = new Nodo(Integer.parseInt(it.next())==1, new Coords(i,j));
+				}
+			}
+			String coords = it.next();
+			String[] aux = coords.split(" ");
+			Coords ini = new Coords(Integer.parseInt(aux[0]), Integer.parseInt(aux[1]));
+			coords = it.next();
+			aux = coords.split(" ");
+			Coords fin = new Coords(Integer.parseInt(aux[0]), Integer.parseInt(aux[1]));
+			AEstrella alg = new AEstrella(tabla, ini, fin);
+			alg.start();
+		} catch (Exception e) {
+			System.out.println("Error parsing board file " + boardFile);
+			e.printStackTrace();
+		}
 	}
 
 }

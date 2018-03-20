@@ -10,4 +10,12 @@ public class Coords {
 		this.x = x;
 		this.y = y;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		Coords c = (Coords)obj;
+		return (c.x == this.x && c.y == this.y);
+	}
+	
+	
 }

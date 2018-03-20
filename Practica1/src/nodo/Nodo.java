@@ -1,22 +1,27 @@
 package nodo;
 
-public class Nodo {
+import tabla.Coords;
+
+public class Nodo implements Comparable<Nodo> {
 	
 	private int p_valor;
-	private int p_coste;
+	private double p_coste;
 	private Nodo p_padre;
 	private boolean p_activo;
+	private Coords p_coords;
 	
-	public Nodo(boolean activo)
+	public Nodo(boolean activo, Coords coords)
 	{
 		p_activo = activo;
+		p_coords = coords;
 	}
 	
-	public Nodo(int valor, int coste, Nodo padre, boolean activo)
+	public Nodo(int valor, int coste, Nodo padre, boolean activo, Coords coords)
 	{
 		p_valor = valor;
 		p_coste = coste;
 		p_padre = padre;
+		p_coords = coords;
 		setActivo(activo);
 	}
 
@@ -28,11 +33,11 @@ public class Nodo {
 		this.p_valor = p_valor;
 	}
 
-	public int getCoste() {
+	public double getCoste() {
 		return p_coste;
 	}
 
-	public void setCoste(int p_coste) {
+	public void setCoste(double p_coste) {
 		this.p_coste = p_coste;
 	}
 
@@ -52,5 +57,26 @@ public class Nodo {
 		this.p_activo = p_activo;
 	}
 	
+	public Coords getCoords() {
+		return p_coords;
+	}
 	
+	public void setCoords(Coords c) {
+		this.p_coords = c;
+	}
+
+	@Override
+	public int compareTo(Nodo arg0) {
+		int res;
+		if (this.p_coste < arg0.p_coste) res = -1;
+		else if (this.p_coste == arg0.p_coste) res = 0;
+		else res = 1;
+		return res;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "(" + this.p_coords.x + ", " + this.p_coords.y + ")";
+	}
 }

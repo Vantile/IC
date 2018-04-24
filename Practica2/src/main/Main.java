@@ -23,23 +23,14 @@ public static void main(String[] args) {
 			String[] atributos = lines.get(0).split(",");
 			lines = Files.readAllLines(juegoPath);
 			Iterator<String> it = lines.iterator();
-			Nodo raiz = new Nodo(null, "", false, atributos[0]);
-			Arbol a = new Arbol(raiz);
+			Nodo raiz = new Nodo(null, "", false);
+			Arbol a = new Arbol(raiz, atributos);
 			while(it.hasNext())
 			{
 				String[] valores = it.next().split(",");
-				int i = 0;
-				for(i = 0; i + 1 < valores.length; ++i)
-				{
-					Nodo aux = a.insert(atributos, valores);
-//					Nodo aux = a.search(atributos[i], valores[i]);
-					/*
-					 * Si es null, crear el nodo en su sitio.
-					 * Si no lo es, guardarlo para usarlo mas tarde.
-					 */
-				}
+				a.insert(valores);
 			}
-			
+			System.out.println("B R U H");
 		} catch (Exception e) {
 			System.out.println("Error parsing file.");
 			e.printStackTrace();

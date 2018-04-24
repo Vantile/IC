@@ -6,66 +6,111 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Arbol {
+	
+	private static final String FALSE_RESPONSE = "no";
+	private static final String TRUE_RESPONSE = "si";
 
 	private Nodo p_raiz;
+	private String[] p_atributos;
 	
 	public Arbol()
 	{
 		p_raiz = new Nodo();
 	}
 	
-	public Arbol(Nodo n)
+	public Arbol(Nodo n, String[] atributos)
 	{
 		p_raiz = n;
+		p_atributos = atributos;
 	}
 	
-	public Nodo insert(String[] atributos, String[] valores)
+	public void insert(String[] valores)
 	{
 		boolean found = false;
 		int level = 0;
-		Queue<String> atributosList = new LinkedList();
 		
-		return insert(p_raiz, atributos, valores, found, level);
+		insert(p_raiz, p_atributos, valores, found, level, valores[p_atributos.length]);
 	}
 	
-	public Nodo search(String atributo, String valor)
+	public Nodo search(String[] valor)
 	{
-		return search(p_raiz, atributo, valor, false);
+		boolean found = false;
+		int level = 0;
+		return search(p_raiz, valor, found, level);
 	}
 
 	public Nodo getRaiz() {
 		return p_raiz;
 	}
 	
-	private Nodo insert(Nodo n, String[] atributos, String[] valores, boolean found, int level)
+	private void insert(Nodo n, String[] atributos, String[] valores, boolean found, int level, String valorFinal)
 	{
-		if(n.getHijos().isEmpty() && !n.isHoja())
+		if(n.getHijos().isEmpty())
 		{
-			if(level == atributos.length)
+			if(atributos.length > level)
 			{
-				Nodo hijo = new Nodo(n, valores[level], true, atributos[level+1]);
+				Nodo hijo = new Nodo(n, valores[level], false);
+				n.addHijo(hijo);
+				if(valorFinal.equals(TRUE_RESPONSE)) hijo.setAllFalse(false);
+				else if(valorFinal.equals(FALSE_RESPONSE)) hijo.setAllTrue(false);
+				insert(hijo, atributos, valores, found, level+1, valorFinal);
 			}
-			
-			
-		}
-	}
-	
-	private Nodo search(Nodo n, String atributo, String valor, boolean found)
-	{
-		if(!found && n.getPadre() != null && n.getPadre().getAtributo().equals(atributo) && n.getValor().equals(valor))
-		{
-			found = true;
-			return n;
+			else
+			{
+				Nodo hijo = new Nodo(n, valores[level], true);
+				n.addHijo(hijo);
+				if(valorFinal.equals(TRUE_RESPONSE)) hijo.setAllFalse(false);
+				else if(valorFinal.equals(FALSE_RESPONSE)) hijo.setAllTrue(false);
+				found = true;
+			}
 		}
 		else
 		{
 			Iterator<Nodo> it = n.getHijos().iterator();
-			Nodo aux = null;
+			boolean child = false;
 			while(it.hasNext())
 			{
-				aux = search(it.next(), atributo, valor, found);
+				Nodo hijo = it.next();
+				if(!hijo.getValor().equals(valores[level])) continue;
+				insert(hijo, atributos, valores, found, level+1, valorFinal);
+				child = true;
 			}
-			return aux;
+			
+			if(!child)
+			{
+				if(atributos.length > level)
+				{
+					Nodo hijo = new Nodo(n, valores[level], false);
+					n.addHijo(hijo);
+					if(valorFinal.equals(TRUE_RESPONSE)) hijo.setAllFalse(false);
+					else if(valorFinal.equals(FALSE_RESPONSE)) hijo.setAllTrue(false);
+					insert(hijo, atributos, valores, found, level+1, valorFinal);
+				}
+				else
+				{
+					Nodo hijo = new Nodo(n, valores[level], true);
+					n.addHijo(hijo);
+					if(valorFinal.equals(TRUE_RESPONSE)) hijo.setAllFalse(false);
+					else if(valorFinal.equals(FALSE_RESPONSE)) hijo.setAllTrue(false);
+					found = true;
+				}
+			}
+		}
+	}
+	
+	private Nodo search(Nodo n, String[] valor, boolean found, int level)
+	{
+		if(!found && n.getPadre() != null && n.getPadre().getValor().equals(valor[level]))
+		{
+			if(level == p_atributos.length && n.getHijos().isEmpty())
+			{
+				found = true;
+				return n;
+			}
+			else
+			{
+				return search();
+			}
 		}
 	}
 }

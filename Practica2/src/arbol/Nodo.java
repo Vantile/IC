@@ -10,16 +10,27 @@ public class Nodo {
 	private String p_valor;
 	private String p_atributo;
 	private boolean p_esHoja;
+	private boolean allTrue;
+	private boolean allFalse;
 	
 	public Nodo() {}
 	
-	public Nodo(Nodo padre, String valor, boolean hoja, String atributo)
+	public Nodo(Nodo padre, String valor, boolean hoja)
 	{
 		this.p_padre = padre;
 		this.p_hijos = new ArrayList<Nodo>();
 		this.p_valor = valor;
 		this.setHoja(hoja);
-		this.setAtributo(atributo);
+		setAllTrue(true);
+		setAllFalse(true);
+	}
+	
+	
+
+	@Override
+	public String toString() {
+		return "Nodo [p_padre=" + p_padre + ", p_hijos=" + p_hijos + ", p_valor=" + p_valor + ", p_atributo="
+				+ p_atributo + ", p_esHoja=" + p_esHoja + "]";
 	}
 
 	public Nodo getPadre() {
@@ -64,6 +75,22 @@ public class Nodo {
 
 	public void setHoja(boolean p_esHoja) {
 		this.p_esHoja = p_esHoja;
+	}
+
+	public boolean isAllTrue() {
+		return allTrue;
+	}
+
+	public void setAllTrue(boolean allTrue) {
+		this.allTrue = allTrue;
+	}
+
+	public boolean isAllFalse() {
+		return allFalse;
+	}
+
+	public void setAllFalse(boolean allFalse) {
+		this.allFalse = allFalse;
 	}
 	
 	

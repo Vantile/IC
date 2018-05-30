@@ -120,5 +120,8 @@ public class Kmedias {
 		{
 			ready = updateCentros();
 		}
+		System.out.println("Centros calculados: ");
+		for(int i = 0; i < centros.size(); i++)
+			System.out.println(centros.get(i).string());
 	}
 }

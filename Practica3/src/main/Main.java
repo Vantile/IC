@@ -1,5 +1,6 @@
 package main;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -40,9 +41,9 @@ public class Main {
 		System.out.println("4. Otro archivo");
 		System.out.print("-> ");
 		int opt = -1;
+		Scanner s = new Scanner(System.in);
 		try 
 		{
-			Scanner s = new Scanner(System.in);
 			opt = s.nextInt();
 			switch(opt)
 			{
@@ -87,6 +88,13 @@ public class Main {
 		{
 			System.out.println("El algoritmo no pudo completarse.");
 		}
+		System.out.println("Pulsa ENTER para salir.");
+		try 
+		{
+			System.in.read();
+		} 
+		catch (IOException e) 
+		{
+		}
 	}
-
 }

@@ -19,4 +19,13 @@ public class Muestra {
 	public void setClase(String clase) {
 		this.clase = clase;
 	}
+	public String string()
+	{
+		String s = "Clase: " + clase + " | Valores: ";
+		for(int i = 0; i < datos.size(); ++i) {
+			s += datos.get(i);
+			if(i+1 < datos.size()) s += " , ";
+		}
+		return s;
+	}
 }

@@ -19,8 +19,42 @@ public class Kmedias {
 		calcCentros();
 	}
 	
-	private void calcCentros()
+	public void pertenencia(Muestra muestra)
 	{
+		List<Double> acumulados = new ArrayList<Double>();
+		double acumD = 0.0;
+		for(int i = 0; i < centros.size(); i++)
+		{
+			double acumA = 0.0;
+			for(int k = 0; k < muestra.getDatos().size(); k++)
+			{
+				acumA += Math.pow(muestra.getDatos().get(k) - centros.get(i).getDatos().get(k), 2);
+			}
+			acumD += 1/acumA;
+			acumulados.add(1/acumA);
+		}
+		double max = 0.0;
+		int indMax = -1;
+		for(int i = 0; i < acumulados.size(); ++i)
+		{
+			double d = acumulados.get(i);
+			d = d / acumD;
+			acumulados.set(i, d);
+			if(d > max)
+			{
+				max = d;
+				indMax = i;
+			}
+		}
+		if(indMax != -1)
+		{
+			System.out.println("La muestra pertenece a la clase " + centros.get(indMax).getClase() + ": " + max);
+		}
+	}
+	
+	private boolean updateCentros()
+	{
+		boolean ready = true;
 		double[][] u = new double[centros.size()][muestras.size()];
 		Iterator<Muestra> mit = muestras.iterator();
 		int mNum = 0;
@@ -37,8 +71,8 @@ public class Kmedias {
 				{
 					d += Math.pow(c.getDatos().get(i) - m.getDatos().get(i), 2);
 				}
-				ds[r] = 1/d;
-				acum += 1/d;
+				ds[r] = Math.pow(1/d, 1/(b-1));
+				acum += Math.pow(1/d, 1/(b-1));
 			}
 			for(int r = 0; r < centros.size(); ++r)
 			{
@@ -48,7 +82,6 @@ public class Kmedias {
 		}
 		for(int i = 0; i < centros.size(); ++i)
 		{
-			Muestra newCenter = new Muestra();
 			ArrayList<Double> values = new ArrayList<Double>();
 			for(int j = 0; j < centros.get(i).getDatos().size(); ++j)
 			{
@@ -58,14 +91,34 @@ public class Kmedias {
 			for(int j = 0; j < muestras.size(); ++j)
 			{
 				Muestra m = muestras.get(j);
-				acumB += Math.pow(u[i][j], 2);
+				acumB += Math.pow(u[i][j], b);
 				for(int k = 0; k < values.size(); ++k)
 				{
 					double v = values.get(k);
-					v += m.getDatos().get(k) * Math.pow(u[i][j], 2);
+					v += m.getDatos().get(k) * Math.pow(u[i][j], b);
 					values.set(k, v);
 				}
 			}
+			double acumC = 0.0;
+			for(int k = 0; k < values.size(); ++k)
+			{
+				double v = values.get(k);
+				v = v/acumB;
+				acumC += Math.abs(v - centros.get(i).getDatos().get(k));
+				values.set(k, v);
+			}
+			centros.get(i).setDatos(values);
+			if(acumC > tolerancia) ready = false;
+		}	
+		return ready;
+	}
+	
+	private void calcCentros()
+	{
+		boolean ready = false;
+		while(!ready)
+		{
+			ready = updateCentros();
 		}
 	}
 }

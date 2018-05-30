@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import kmedias.Kmedias;
 import kmedias.Muestra;
@@ -32,6 +33,60 @@ public class Main {
 		centros.add(centroClase1);
 		centros.add(centroClase2);
 		Kmedias alg = new Kmedias(centros, muestras);
+		System.out.println("Algoritmo preparado, escoge muestra a analizar: ");
+		System.out.println("1. Test 1");
+		System.out.println("2. Test 2");
+		System.out.println("3. Test 3");
+		System.out.println("4. Otro archivo");
+		System.out.print("-> ");
+		int opt = -1;
+		try 
+		{
+			Scanner s = new Scanner(System.in);
+			opt = s.nextInt();
+			switch(opt)
+			{
+			case 1:
+			{
+				List<Muestra> test = Parser.parse("TestIris01.txt");
+				Muestra m = test.get(0);
+				alg.pertenencia(m);
+			}
+			break;
+			case 2:
+			{
+				List<Muestra> test = Parser.parse("TestIris02.txt");
+				Muestra m = test.get(0);
+				alg.pertenencia(m);
+			}
+			break;
+			case 3:
+			{
+				List<Muestra> test = Parser.parse("TestIris03.txt");
+				Muestra m = test.get(0);
+				alg.pertenencia(m);
+			}
+			break;
+			case 4:
+			{
+				System.out.println("Escribe el nombre del archivo: ");
+				System.out.print("-> ");
+				s.reset();
+				String file = s.next();
+				List<Muestra> test = Parser.parse(file);
+				Muestra m = test.get(0);
+				alg.pertenencia(m);
+			}
+			break;
+			default:
+			{
+				throw new Exception("Opcion incorrecta.");
+			}
+			}
+		} catch (Exception e) 
+		{
+			System.out.println("El algoritmo no pudo completarse.");
+		}
 	}
 
 }

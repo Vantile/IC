@@ -43,8 +43,7 @@ public class Parser {
 		} 
 		catch(Exception e) 
 		{
-			System.out.println("Error parsing file.");
-			e.printStackTrace();
+			System.out.println("Error parseando el archivo.");
 		}
 		return null;
 	}

@@ -23,7 +23,7 @@ public static void main(String[] args) {
 			String[] atributos = lines.get(0).split(",");
 			lines = Files.readAllLines(juegoPath);
 			Iterator<String> it = lines.iterator();
-			Nodo raiz = new Nodo(null, "", false);
+			Nodo raiz = new Nodo(null, "");
 			Arbol a = new Arbol(raiz, atributos);
 			while(it.hasNext())
 			{

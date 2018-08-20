@@ -15,12 +15,11 @@ public class Nodo {
 	
 	public Nodo() {}
 	
-	public Nodo(Nodo padre, String valor, boolean hoja)
+	public Nodo(Nodo padre, String valor)
 	{
 		this.p_padre = padre;
 		this.p_hijos = new ArrayList<Nodo>();
 		this.p_valor = valor;
-		this.setHoja(hoja);
 		setAllTrue(true);
 		setAllFalse(true);
 	}

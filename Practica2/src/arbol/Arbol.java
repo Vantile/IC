@@ -45,72 +45,137 @@ public class Arbol {
 	
 	private void insert(Nodo n, String[] atributos, String[] valores, boolean found, int level, String valorFinal)
 	{
-		if(n.getHijos().isEmpty())
+		if(level < atributos.length)
 		{
-			if(atributos.length > level)
+			if(n.getHijos().isEmpty())
 			{
-				Nodo hijo = new Nodo(n, valores[level], false);
-				n.addHijo(hijo);
-				if(valorFinal.equals(TRUE_RESPONSE)) hijo.setAllFalse(false);
-				else if(valorFinal.equals(FALSE_RESPONSE)) hijo.setAllTrue(false);
-				insert(hijo, atributos, valores, found, level+1, valorFinal);
+				Nodo newNode = new Nodo(n, valores[level]);
+				n.addHijo(newNode);
+				insert(newNode, atributos, valores, found, level+1, valorFinal);
 			}
 			else
 			{
-				Nodo hijo = new Nodo(n, valores[level], true);
-				n.addHijo(hijo);
-				if(valorFinal.equals(TRUE_RESPONSE)) hijo.setAllFalse(false);
-				else if(valorFinal.equals(FALSE_RESPONSE)) hijo.setAllTrue(false);
-				found = true;
+				if(containsValue(n, valores[level]))
+				{
+					Nodo child = returnChild(n, valores[level]);
+					insert(child, atributos, valores, found, level+1, valorFinal);
+				}
+				else
+				{
+					Nodo newNode = new Nodo(n, valores[level]);
+					n.addHijo(newNode);
+					insert(newNode, atributos, valores, found, level+1, valorFinal);
+				}
+			}
+			
+			if(valorFinal == FALSE_RESPONSE && allChildFalse(n))
+			{
+				n.setAllFalse(true);
+			}
+			else
+			{
+				n.setAllFalse(false);
+			}
+			
+			if(valorFinal == TRUE_RESPONSE && allChildTrue(n))
+			{
+				n.setAllTrue(true);
+			}
+			else
+			{
+				n.setAllTrue(false);
 			}
 		}
 		else
 		{
-			Iterator<Nodo> it = n.getHijos().iterator();
-			boolean child = false;
-			while(it.hasNext())
+			if(valorFinal == FALSE_RESPONSE)
 			{
-				Nodo hijo = it.next();
-				if(!hijo.getValor().equals(valores[level])) continue;
-				insert(hijo, atributos, valores, found, level+1, valorFinal);
-				child = true;
+				n.setAllFalse(true);
+			}
+			else
+			{
+				n.setAllFalse(false);
 			}
 			
-			if(!child)
+			if(valorFinal == TRUE_RESPONSE)
 			{
-				if(atributos.length > level)
-				{
-					Nodo hijo = new Nodo(n, valores[level], false);
-					n.addHijo(hijo);
-					if(valorFinal.equals(TRUE_RESPONSE)) hijo.setAllFalse(false);
-					else if(valorFinal.equals(FALSE_RESPONSE)) hijo.setAllTrue(false);
-					insert(hijo, atributos, valores, found, level+1, valorFinal);
-				}
-				else
-				{
-					Nodo hijo = new Nodo(n, valores[level], true);
-					n.addHijo(hijo);
-					if(valorFinal.equals(TRUE_RESPONSE)) hijo.setAllFalse(false);
-					else if(valorFinal.equals(FALSE_RESPONSE)) hijo.setAllTrue(false);
-					found = true;
-				}
+				n.setAllTrue(true);
+			}
+			else
+			{
+				n.setAllTrue(false);
 			}
 		}
 	}
 	
-	private Nodo search(Nodo n, String[] valor, boolean found, int level)
+	private boolean allChildFalse(Nodo n)
 	{
-		if(!found && n.getPadre() != null && n.getPadre().getValor().equals(valor[level]))
+		if(n.getHijos().isEmpty()) return true;
+		Iterator<Nodo> it = n.getHijos().iterator();
+		boolean check = true;
+		while(it.hasNext() && check)
 		{
-			if(level == p_atributos.length && n.getHijos().isEmpty())
+			Nodo auxNode = it.next();
+			if(!auxNode.isAllFalse()) check = false;
+		}
+		return check;
+	}
+	
+	private boolean allChildTrue(Nodo n)
+	{
+		if(n.getHijos().isEmpty()) return true;
+		Iterator<Nodo> it = n.getHijos().iterator();
+		boolean check = true;
+		while(it.hasNext() && check)
+		{
+			Nodo auxNode = it.next();
+			if(!auxNode.isAllTrue()) check = false;
+		}
+		return check;
+	}
+	
+	private boolean containsValue(Nodo n, String value)
+	{
+		Iterator<Nodo> it = n.getHijos().iterator();
+		boolean check = false;
+		while(it.hasNext() && !check)
+		{
+			Nodo aux = it.next();
+			if(aux.getValor().equals(value)) check = true;
+		}
+		return check;
+	}
+	
+	private Nodo returnChild(Nodo n, String value)
+	{
+		Iterator<Nodo> it = n.getHijos().iterator();
+		boolean check = false;
+		Nodo ret = n;
+		while(it.hasNext() && !check)
+		{
+			Nodo aux = it.next();
+			if(aux.getValor().equals(value))
 			{
-				found = true;
-				return n;
-			}
-			else
-			{
-				return search();
+				ret = aux;
+				check = true;
 			}
 		}
+		return ret;
+	}
+	
+	private Nodo search(Nodo n, String[] valor, boolean found, int level)
+	{
+//		if(!found && n.getPadre() != null && n.getPadre().getValor().equals(valor[level]))
+//		{
+//			if(level == p_atributos.length && n.getHijos().isEmpty())
+//			{
+//				found = true;
+//				return n;
+//			}
+//			else
+//			{
+//				return search();
+//			}
+//		}
 	}
 }

@@ -7,8 +7,8 @@ import java.util.Queue;
 
 public class Arbol {
 	
-	private static final String FALSE_RESPONSE = "no";
-	private static final String TRUE_RESPONSE = "si";
+	public static final String FALSE_RESPONSE = "no";
+	public static final String TRUE_RESPONSE = "si";
 
 	private Nodo p_raiz;
 	private String[] p_atributos;
@@ -32,11 +32,10 @@ public class Arbol {
 		insert(p_raiz, p_atributos, valores, found, level, valores[p_atributos.length]);
 	}
 	
-	public Nodo search(String[] valor)
+	public boolean[] search(String[] valor)
 	{
-		boolean found = false;
 		int level = 0;
-		return search(p_raiz, valor, found, level);
+		return search(p_raiz, valor, level);
 	}
 
 	public Nodo getRaiz() {
@@ -68,7 +67,7 @@ public class Arbol {
 				}
 			}
 			
-			if(valorFinal == FALSE_RESPONSE && allChildFalse(n))
+			if(valorFinal.equals(FALSE_RESPONSE) && allChildFalse(n))
 			{
 				n.setAllFalse(true);
 			}
@@ -77,7 +76,7 @@ public class Arbol {
 				n.setAllFalse(false);
 			}
 			
-			if(valorFinal == TRUE_RESPONSE && allChildTrue(n))
+			if(valorFinal.equals(TRUE_RESPONSE) && allChildTrue(n))
 			{
 				n.setAllTrue(true);
 			}
@@ -88,7 +87,7 @@ public class Arbol {
 		}
 		else
 		{
-			if(valorFinal == FALSE_RESPONSE)
+			if(valorFinal.equals(FALSE_RESPONSE))
 			{
 				n.setAllFalse(true);
 			}
@@ -97,7 +96,7 @@ public class Arbol {
 				n.setAllFalse(false);
 			}
 			
-			if(valorFinal == TRUE_RESPONSE)
+			if(valorFinal.equals(TRUE_RESPONSE))
 			{
 				n.setAllTrue(true);
 			}
@@ -163,19 +162,45 @@ public class Arbol {
 		return ret;
 	}
 	
-	private Nodo search(Nodo n, String[] valor, boolean found, int level)
+	private boolean[] search(Nodo n, String[] valor, int level)
 	{
-//		if(!found && n.getPadre() != null && n.getPadre().getValor().equals(valor[level]))
-//		{
-//			if(level == p_atributos.length && n.getHijos().isEmpty())
-//			{
-//				found = true;
-//				return n;
-//			}
-//			else
-//			{
-//				return search();
-//			}
-//		}
+		if(n.isAllTrue())
+		{
+			boolean[] ret = new boolean[2];
+			ret[0] = true;
+			ret[1] = true;
+			return ret;
+		}
+		
+		if(n.isAllFalse())
+		{
+			boolean[] ret = new boolean[2];
+			ret[0] = true;
+			ret[1] = false;
+			return ret;
+		}
+		
+		if(level < p_atributos.length)
+		{
+			if(containsValue(n, valor[level]))
+			{
+				Nodo child = returnChild(n, valor[level]);
+				return search(child, valor, level+1);
+			}
+			else
+			{
+				boolean[] ret = new boolean[2];
+				ret[0] = false;
+				ret[1] = false;
+				return ret;
+			}
+		}
+		else
+		{
+			boolean[] ret = new boolean[2];
+			ret[0] = false;
+			ret[1] = false;
+			return ret;
+		}
 	}
 }
